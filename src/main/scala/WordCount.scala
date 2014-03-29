@@ -1,8 +1,8 @@
 package main.scala
 
 import org.apache.hadoop.conf.{Configuration, Configured}
-import org.apache.hadoop.io.{NullWritable, IntWritable, Text, LongWritable}
-import org.apache.hadoop.mapred.{OutputCollector, Reporter}
+import org.apache.hadoop.io.{IntWritable, Text, LongWritable}
+import org.apache.hadoop.mapred.Reporter
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
 import org.apache.hadoop.mapreduce.{Reducer, Mapper, Job}
@@ -29,7 +29,7 @@ object WordCount extends Configured with Tool {
   def run(args: Array[String]): Int = {
     var input = args(0);
     var output = args(1)
-
+    var someString = ""
 
     //creating a JobConf object and assigning a job name for identification purposes
     val job: Job = Job.getInstance(getConf, WordCount.getClass.getSimpleName)
@@ -79,7 +79,7 @@ object WordCount extends Configured with Tool {
     protected override def setup(context: Reducer[Text, IntWritable, Text, IntWritable]#Context) {
       // Get HBase table of invalid variable combination
       val hconf = HBaseConfiguration.create
-      table = new HTable(hconf, "wordcount_table")
+      table = new HTable(hconf, "wc_table")
     }
 
     override def reduce(key: Text, values: lang.Iterable[IntWritable], context: Reducer[Text, IntWritable, Text, IntWritable]#Context) {
